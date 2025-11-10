@@ -17,11 +17,32 @@ class Menu:
         frame.pack(fill="both", expand=True)
         ttk.Label(frame, text="📋 Lista de Tareas", font=("Segoe UI", 14, "bold")).pack(pady=10)
 
-        self.tree = ttk.Treeview(frame, columns=("desc", "fecha", "notas", "cat", "estado"), show="headings")
+        # --- CONTENEDOR PARA EL TREEVIEW Y EL SCROLLBAR ---
+        # Creación del Frame nuevo para contener tanto el Treeview como el Scrollbar
+        
+        tree_container = ttk.Frame(frame)
+        tree_container.pack(fill="both", expand=True, pady=10)
+        
+        # Creación de la barra de desplazamiento (Scrollbar)
+        scrollbar = ttk.Scrollbar(tree_container, orient="vertical")
+
+        self.tree = ttk.Treeview(tree_container, columns=("desc", "fecha", "notas", "cat", "estado"), show="headings")
+        
+        # Empaquetamiento del Scrollbar 
+        scrollbar.pack(side="right", fill="y")
+        
+        self.tree.pack(side="left", fill="both", expand=True)
+
+        #  Asociación Scrollbar con el Treeview
+        scrollbar.config(command=self.tree.yview)
+
+        self.tree.config(yscrollcommand=scrollbar.set)
+
         for col, texto in zip(("desc", "fecha", "notas", "cat", "estado"), ["Descripción", "Fecha y Hora", "Notas", "Categoría", "Estado"]):
             self.tree.heading(col, text=texto)
             self.tree.column(col, width=150)
-        self.tree.pack(fill="both", expand=True, pady=10)
+
+        # <-- Línea eliminada/movida self.tree.pack(fill="both", expand=True, pady=10)
 
         botones = ttk.Frame(frame)
         botones.pack(pady=5)
